@@ -10,7 +10,7 @@ struct publish_str;
 {
 	publish_str * obj= (publish_str *) obj1;
 	obj->sevice_obj->adMessageToQueue(*(obj->message_obj));
-	cout<<"messahe published to queue \n";
+	cout<<"message published to queue \n";
 	//pubSubService.adMessageToQueue(Message);
 }
 

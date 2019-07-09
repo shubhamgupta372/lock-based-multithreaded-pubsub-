@@ -12,21 +12,19 @@ using namespace std;
 
 int main()
 {
-
-	//publisher pub[5];
 	pubsubservice service;
-	publisher  pobj[5];
+	publisher  pobj[10];
 	message cplusplusMsg[5]={{"cplusplus", "Core cplusplus Concepts"},
 	{"cplusplus", "Dependency and AOP"},{"cplusplus", "STL library"},
 	{"cplusplus","Boost"},{"cplusplus","pubsub"}};
-	publish_str *pstr[5];
+	publish_str *pstr[10];
 	subscriber sobj[2]={{"cplusplussub"},{"pythonsub"}};
 	service.addSubscriber("cplusplus",&sobj[0]);
 	
-	for(int i=0;i<5;i++)
+	for(int i=0;i<10;i++)
 	{
 		pstr[i]= (publish_str *)malloc(sizeof(publish_str));
-		pstr[i]->message_obj=&cplusplusMsg[i];
+		pstr[i]->message_obj=&cplusplusMsg[i%5];
 		pstr[i]->sevice_obj=&service;
 		//pobj[i]=(publisher *)malloc(sizeof(publisher));
 		pobj[i].publisher_args=pstr[i];
@@ -53,7 +51,7 @@ int main()
 		}
 	}
     
- 	for(int i=0;i<5;i++){
+ 	for(int i=0;i<10;i++){
  		pobj[i].Join();
 	}
 	service.Join();
