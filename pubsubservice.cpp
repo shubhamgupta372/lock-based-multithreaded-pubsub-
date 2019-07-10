@@ -57,23 +57,6 @@ void pubsubservice::broadcast()
 			it = subscribersTopicMap.find(topic);
 			if (it != subscribersTopicMap.end()) {
 				vector<subscriber*> subscribers = subscribersTopicMap[topic];
-				//std::set<subscriber>::iterator it;
-				/*for (auto it = subscribers.begin(); it != subscribers.end(); it++)
-				{
-					subscriber obj = *it;
-					vector<message> subMessages = obj.getSubscriberMessages();
-					subMessages.push_back(Message);
-					obj.setSubscriberMessages(subMessages);
-					obj.printMessages();
-					cout << "\n Number of messages for current sub " << subMessages.size() << endl;
-				}*/
-				/*for (int i = 0; i < subscribers.size(); i++) {
-					vector<message> subMessages = subscribers[i].getSubscriberMessages();
-					subMessages.push_back(Message);
-					subscribers[i].setSubscriberMessages(subMessages);
-					subscribers[i].printMessages();
-					cout << "\n Number of messages for current sub " << subMessages.size() << endl;
-				}*/
 				for (subscriber* a : subscribers) {
 					vector<message> subMessages = a->getSubscriberMessages();
 					subMessages.push_back(Message);

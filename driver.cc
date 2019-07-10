@@ -10,25 +10,29 @@
 #include<string>
 using namespace std;
 
+void InitialisePubObject(message &mobj, pubsubservice &psobj, publisher &pobj)
+{
+	publish_str * pargs;
+	pargs= new publish_str;
+	pargs->message_obj=&mobj;
+	pargs->sevice_obj=&psobj;
+	pobj.publisher_args=pargs;
+	//return &pobj;
+}
+
 int main()
 {
 	pubsubservice service;
-	publisher  pobj[10];
+	publisher  pobj[5];
 	message cplusplusMsg[5]={{"cplusplus", "Core cplusplus Concepts"},
 	{"cplusplus", "Dependency and AOP"},{"cplusplus", "STL library"},
 	{"cplusplus","Boost"},{"cplusplus","pubsub"}};
-	publish_str *pstr[10];
 	subscriber sobj[2]={{"cplusplussub"},{"pythonsub"}};
 	service.addSubscriber("cplusplus",&sobj[0]);
 	
-	for(int i=0;i<10;i++)
+	for(int i=0;i<5;i++)
 	{
-		pstr[i]= (publish_str *)malloc(sizeof(publish_str));
-		pstr[i]->message_obj=&cplusplusMsg[i%5];
-		pstr[i]->sevice_obj=&service;
-		//pobj[i]=(publisher *)malloc(sizeof(publisher));
-		pobj[i].publisher_args=pstr[i];
-		/*  int tid=pthread_create(&thread[i],NULL, pobj[i]->publish,pstr[i]); */
+		InitialisePubObject(cplusplusMsg[i],service,pobj[i]);
 		string name="Publisher Thread " + std::to_string(i+1);
         bool status=pobj[i].Start(name.c_str());
 		if(!status){
@@ -51,7 +55,7 @@ int main()
 		}
 	}
     
- 	for(int i=0;i<10;i++){
+ 	for(int i=0;i<5;i++){
  		pobj[i].Join();
 	}
 	service.Join();

@@ -73,17 +73,16 @@ public:
 	}
 
 	bool Start(const char* thread_name) {
-		if(pthread_create(&m_ThreadHandle, &m_ThreadAttribute, &Dispatch, this)!=0){
-			m_ThreadHandle = (pthread_t)NULL;
-			std::cout<<"Fail.......................... \n";
-		}
-		if (!m_ThreadHandle) {
+		int err = pthread_create(&m_ThreadHandle, &m_ThreadAttribute, &Dispatch, this);
+		
+		// err will give 
+		if (err) {
 			std::cerr << "BaseThread: failed to Start." << std::endl;
 			return false;
 		}
 		//Give it a name 
 		strcpy(m_ThreadName,thread_name);
-		std::cout<<"in "<<this->GetThreadName()<< " Start \n";
+		//std::cout<<"in "<<this->GetThreadName()<< " Start \n";
 		return true;
 	}
 
