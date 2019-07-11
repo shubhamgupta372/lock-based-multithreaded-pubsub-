@@ -12,8 +12,8 @@ using namespace std;
 
 void InitialisePubObject(message &mobj, pubsubservice &psobj, publisher &pobj)
 {
-	publish_str * pargs;
-	pargs= new publish_str;
+	publishArguments * pargs;
+	pargs= new publishArguments;
 	pargs->message_obj=&mobj;
 	pargs->sevice_obj=&psobj;
 	pobj.publisher_args=pargs;

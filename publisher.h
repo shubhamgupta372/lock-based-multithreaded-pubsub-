@@ -10,14 +10,14 @@
 #include"threadbase.h"
 //#include"pubstruc.h"
 
-struct publish_str;
+struct publishArguments;
 using namespace std;
 
 class publisher:public ThreadBase {
 public:
 	 void * publish(void * obj);
 	 void Run();
-	 publish_str * publisher_args;
+	 publishArguments * publisher_args;
 
 };
 

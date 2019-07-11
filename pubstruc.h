@@ -9,7 +9,7 @@
 #include"message.h"
 using namespace std;
 
-struct publish_str{
+struct publishArguments{
 	message * message_obj;
 	pubsubservice * sevice_obj;
 };
