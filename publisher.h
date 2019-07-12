@@ -8,7 +8,6 @@
 #include"pubsubservice.h"
 #include"message.h"
 #include"threadbase.h"
-//#include"pubstruc.h"
 
 struct publishArguments;
 using namespace std;

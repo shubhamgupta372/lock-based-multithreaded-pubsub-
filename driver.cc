@@ -17,7 +17,6 @@ void InitialisePubObject(message &mobj, pubsubservice &psobj, publisher &pobj)
 	pargs->message_obj=&mobj;
 	pargs->sevice_obj=&psobj;
 	pobj.publisher_args=pargs;
-	//return &pobj;
 }
 
 int main()

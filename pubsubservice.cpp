@@ -5,13 +5,13 @@
 #include<set>
 #include<algorithm>
 using namespace std;
-Semaphore sem;
+Mutex mutx;
 
 void pubsubservice::adMessageToQueue(message &msg)
 {
-	sem.Lock();
+	int status = mutx.lock();
 	messagesQueue.push(msg);
-	sem.UnLock();
+	status = mutx.unlock();
 }
 void pubsubservice::addSubscriber(string topic, subscriber* Subscriber)
 {
@@ -48,7 +48,7 @@ void pubsubservice::broadcast()
 		cout << "No messages from publisher to display";
 	}
 	else {
-		sem.Lock();
+		int status= mutx.lock();
 		while (messagesQueue.size()) {
 			message Message = messagesQueue.front();
 			messagesQueue.pop();
@@ -66,7 +66,7 @@ void pubsubservice::broadcast()
 				}
 			}
 		}
-		sem.UnLock();
+		status= mutx.unlock();
 	}
 
 }

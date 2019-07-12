@@ -7,36 +7,27 @@
 #include <iostream>
 #include <cstring>
 
-class Semaphore {
-protected:
-	sem_t*					m_handle;
+class Mutex{
 public:
-	Semaphore() {
-		m_handle = new sem_t();
-		sem_init(m_handle, 0, 1);
+	Mutex()
+	{
+		plock = PTHREAD_MUTEX_INITIALIZER;
 	}
-	virtual ~Semaphore() {
-		if(m_handle)
-		{
-			sem_destroy(m_handle);
-			delete m_handle;
-			m_handle =NULL;
-		}
+	virtual ~Mutex()
+	{
+		pthread_mutex_unlock(&plock);
 	}
+	int lock()
+	{
+		return pthread_mutex_lock(&plock);
+	}
+	int unlock()
+	{
+		return pthread_mutex_unlock(&plock);
+	}
+private:
+pthread_mutex_t plock;
 
-	bool Lock() {
-		sem_wait(m_handle);
-		return true;
-	}
-	bool UnLock() {
-		sem_post(m_handle);
-		return true;
-	}
-	bool IsLocked( ) {
-		int sval = -1;
-		sem_getvalue(m_handle, &sval);
-		return (sval==0);
-	}
 };
 
 class ThreadBase {
