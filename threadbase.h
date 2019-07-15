@@ -6,16 +6,29 @@
 #include <semaphore.h>
 #include <iostream>
 #include <cstring>
+using namespace std;
 
 class Mutex{
 public:
 	Mutex()
 	{
-		plock = PTHREAD_MUTEX_INITIALIZER;
+		//plock = PTHREAD_MUTEX_INITIALIZER;
+		if (pthread_mutexattr_init(&attr) != 0) {
+   			perror("pthread_mutexattr_init() error");
+    		exit(1);
+  		}
+		if(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK) !=0){
+			perror("pthread_mutexattr_settype() error");
+    		exit(1);
+		}
+		if (pthread_mutex_init(&plock,&attr) != 0) {
+   			perror("pthread_mutex_init() error");
+    		exit(1);
+  		}
 	}
 	virtual ~Mutex()
 	{
-		pthread_mutex_unlock(&plock);
+		pthread_mutex_destroy(&plock);
 	}
 	int lock()
 	{
@@ -27,6 +40,7 @@ public:
 	}
 private:
 pthread_mutex_t plock;
+pthread_mutexattr_t attr;
 
 };
 
@@ -44,12 +58,12 @@ private:
 	static
 	void *Dispatch(void *arg) {
 		ThreadBase *pThread(static_cast<ThreadBase *>(arg));
-		std::cout<<"in "<<pThread->GetThreadName()<< " Dispatch \n";
+		//std::cout<<"in "<<pThread->GetThreadName()<< " Dispatch \n";
 		pThread->Run();
 		return NULL;
 	}
 
-public:
+public: 
 	/*	Description		- Default constructor.
 	 */
 	ThreadBase() : m_ThreadHandle (0) {
@@ -66,9 +80,21 @@ public:
 	bool Start(const char* thread_name) {
 		int err = pthread_create(&m_ThreadHandle, &m_ThreadAttribute, &Dispatch, this);
 		
-		// err will give 
+		// err will contain error code in case thread is not created
 		if (err) {
 			std::cerr << "BaseThread: failed to Start." << std::endl;
+			if(err == EINVAL){
+				cout<<"Error Details: In valid thread attributes \n";
+			}
+			else if(err == EAGAIN){
+				cout<<"Error Details: Insufficient resources to create another thread or Limit on no of threads encounterted \n";
+			}
+			else if(err == EDEADLK){
+				cout<<"Error Details: Deadlock \n";
+			}
+			else if(err == ESRCH){
+				cout<<"Error Details: No such thread id \n";
+			}
 			return false;
 		}
 		//Give it a name 
@@ -88,12 +114,10 @@ public:
 
 	void Join()
 	{
-		//std::cout<<"join hi ";
 		void * ret;
 		if(pthread_join(m_ThreadHandle, &ret)!=0){
 			std::cout<<"Cannot join threads, Error \n";
 		}
-		//std::cout<<"join bye ";
 	}
 };
 

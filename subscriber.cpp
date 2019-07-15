@@ -37,5 +37,5 @@ void subscriber::printMessages() const
 }
 void subscriber::Run()
 {
-	cout<<"In Subscriber "<<this->name<<" Run method \n";
+	//cout<<"In Subscriber "<<this->name<<" Run method \n";
 }

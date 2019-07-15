@@ -10,6 +10,7 @@
 #include<string>
 using namespace std;
 
+// method to intialise arguments of publish method in publisher object
 void InitialisePubObject(message &mobj, pubsubservice &psobj, publisher &pobj)
 {
 	publishArguments * pargs;
@@ -21,14 +22,16 @@ void InitialisePubObject(message &mobj, pubsubservice &psobj, publisher &pobj)
 
 int main()
 {
-	pubsubservice service;
+	pubsubservice service(1); 
 	publisher  pobj[5];
 	message cplusplusMsg[5]={{"cplusplus", "Core cplusplus Concepts"},
-	{"cplusplus", "Dependency and AOP"},{"cplusplus", "STL library"},
-	{"cplusplus","Boost"},{"cplusplus","pubsub"}};
+	{"cplusplus", "Dependency and AOP"},{"java", "STL library"},
+	{"cplusplus","Boost"},{"java","pubsub"}};
 	subscriber sobj[2]={{"cplusplussub"},{"pythonsub"}};
+	subscriber def("default");
 	service.addSubscriber("cplusplus",&sobj[0]);
 	
+	// creating thread for each publisher object and publishing meassges
 	for(int i=0;i<5;i++)
 	{
 		InitialisePubObject(cplusplusMsg[i],service,pobj[i]);
@@ -42,10 +45,13 @@ int main()
 	cout<<"Hello \n";
 	cout<< service.messagesQueue.size()<<endl;
 
+	//creating single service thread to run polling/broadcast function
 	bool status=service.Start("Service_Thread");
 		if(!status){
 			cout<<"Service Thread not created successfully \n";
 		}
+
+	// creating 2 subscriber threads	
 	for(int i=0;i<2;i++){
 		string name="Subscriber Thread " + std::to_string(i+1);
         bool status=sobj[i].Start(name.c_str());
@@ -54,6 +60,8 @@ int main()
 		}
 	}
     
+
+	// join all the publisher, subscriber and service threads
  	for(int i=0;i<5;i++){
  		pobj[i].Join();
 	}

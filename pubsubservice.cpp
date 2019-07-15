@@ -7,11 +7,25 @@
 using namespace std;
 Mutex mutx;
 
+pubsubservice::pubsubservice(int size)
+{
+	this->size=size;
+}
 void pubsubservice::adMessageToQueue(message &msg)
 {
-	int status = mutx.lock();
-	messagesQueue.push(msg);
-	status = mutx.unlock();
+	while(1){
+		if(messagesQueue.size()<this->size){
+			int status = mutx.lock();
+			messagesQueue.push(msg);
+			status = mutx.unlock();
+			break;
+		}
+		else
+		{
+			sleep(5);/* code */
+		}
+	}
+	
 }
 void pubsubservice::addSubscriber(string topic, subscriber* Subscriber)
 {
@@ -44,31 +58,44 @@ void pubsubservice::removeSubscriber(string topic, subscriber* Subscriber)
 }
 void pubsubservice::broadcast()
 {
-	if (!messagesQueue.size()){
-		cout << "No messages from publisher to display";
-	}
-	else {
-		int status= mutx.lock();
-		while (messagesQueue.size()) {
-			message Message = messagesQueue.front();
-			messagesQueue.pop();
-			string topic = Message.getTopic();
-			map<string, vector<subscriber*>>::iterator it;
-			it = subscribersTopicMap.find(topic);
-			if (it != subscribersTopicMap.end()) {
-				vector<subscriber*> subscribers = subscribersTopicMap[topic];
-				for (subscriber* a : subscribers) {
-					vector<message> subMessages = a->getSubscriberMessages();
-					subMessages.push_back(Message);
-					a->setSubscriberMessages(subMessages);
-					cout << "\n Number of messages for current sub " <<a->name <<" are " << subMessages.size() << " : " <<a->subscriberMessages.size() << endl;
-					a->printMessages();
-				}
-			}
-		}
-		status= mutx.unlock();
-	}
+	while(1){
+		if (!messagesQueue.size()){
+			cout << "No messages from publisher to display \n";
+			sleep(4);
 
+		}
+		else {
+			int status= mutx.lock();
+			while (messagesQueue.size()) {
+				message Message = messagesQueue.front();
+				messagesQueue.pop();
+				string topic = Message.getTopic();
+				map<string, vector<subscriber*>>::iterator it;
+				it = subscribersTopicMap.find(topic);
+				if (it != subscribersTopicMap.end()) {
+					vector<subscriber*> subscribers = subscribersTopicMap[topic];
+					for (subscriber* a : subscribers) {
+						vector<message> subMessages = a->getSubscriberMessages();
+						subMessages.push_back(Message);
+						a->setSubscriberMessages(subMessages);
+						cout << "\nNumber of messages for current sub " <<a->name <<" are " << subMessages.size() << " : " <<a->subscriberMessages.size() << endl;
+						a->printMessages();
+					}
+				}
+				else
+				{
+					cout<<"No subscriber for "<< topic << " topic. pushing to default subscriber" <<endl;
+					vector<message> subMessages = defobject->getSubscriberMessages();
+					subMessages.push_back(Message);
+					defobject->setSubscriberMessages(subMessages);
+					cout << "\nNumber of messages for current sub " <<defobject->name <<" are " << subMessages.size() << " : " <<defobject->subscriberMessages.size() << endl;
+					defobject->printMessages();
+				}
+				
+			}
+			status= mutx.unlock();
+		}
+	}
 }
 void pubsubservice::getMessagesForSubscriberOfTopic(string topic, subscriber &Subscriber)
 {

@@ -13,6 +13,7 @@ using namespace std;
 
 class pubsubservice:public ThreadBase {
 public:
+	pubsubservice(int);
     void Run();
 	void adMessageToQueue(message &message);
 	void addSubscriber(string topic, subscriber* Subscriber);
@@ -23,6 +24,8 @@ public:
 public:
 	map<string, vector<subscriber *>> subscribersTopicMap;// change set to vector
 	queue<message> messagesQueue;
+	subscriber *defobject= new subscriber("default");
+	int size;
 
 };
 
