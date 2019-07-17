@@ -4,7 +4,7 @@
 #include"subscriber.h"
 #include"publisher.h"
 #include<pthread.h>
-#include"pubstruc.h"
+#include"publisharguments.h"
 using namespace std;
 //class publisher;
 //typedef void * (*THREADFUNCPTR)(void *);
@@ -14,18 +14,18 @@ int main()
 {
 	pthread_t thread[TOTAL_THREADS];
 	//publisher pub[5];
-	pubsubservice service;
+	pubsubservice service(10);
 	publisher * pobj[50];
 	//message cplusplusMsg[5];
 	message cplusplusMsg[5]={{"cplusplus", "Core cplusplus Concepts"},
 	{"cplusplus", "Dependency and AOP"},{"cplusplus", "STL library"},
 	{"cplusplus","Boost"},{"cplusplus","pubsub"}};
-	publish_str *pstr[50];
+	publishArguments *pstr[50];
 
 	
 	for(int i=0;i<TOTAL_THREADS;i++)
 	{
-		pstr[i]= (publish_str *)malloc(sizeof(publish_str));
+		pstr[i]= (publishArguments *)malloc(sizeof(publishArguments));
 		pstr[i]->message_obj=&cplusplusMsg[i%5];
 		pstr[i]->sevice_obj=&service;
 		int tid=pthread_create(&thread[i],NULL, pobj[i]->publish,pstr[i]);

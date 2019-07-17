@@ -24,7 +24,7 @@ public:
 public:
 	map<string, vector<subscriber *>> subscribersTopicMap;// change set to vector
 	queue<message> messagesQueue;
-	subscriber *defobject= new subscriber("default");
+	subscriber *defSubscriber= new subscriber("default");
 	int size;
 
 };

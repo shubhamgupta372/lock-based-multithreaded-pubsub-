@@ -6,7 +6,7 @@
 #include"pubsubservice.h"
 #include"subscriber.h"
 #include"publisher.h"
-#include"pubstruc.h"
+#include"publisharguments.h"
 #include<string>
 using namespace std;
 
@@ -22,13 +22,12 @@ void InitialisePubObject(message &mobj, pubsubservice &psobj, publisher &pobj)
 
 int main()
 {
-	pubsubservice service(1); 
+	pubsubservice service(2); 
 	publisher  pobj[5];
 	message cplusplusMsg[5]={{"cplusplus", "Core cplusplus Concepts"},
 	{"cplusplus", "Dependency and AOP"},{"java", "STL library"},
 	{"cplusplus","Boost"},{"java","pubsub"}};
 	subscriber sobj[2]={{"cplusplussub"},{"pythonsub"}};
-	subscriber def("default");
 	service.addSubscriber("cplusplus",&sobj[0]);
 	
 	// creating thread for each publisher object and publishing meassges
@@ -42,7 +41,7 @@ int main()
 		}
 		std::cout<<pobj[i].GetThreadName()<<" created \n";
 	}
-	cout<<"Hello \n";
+	
 	cout<< service.messagesQueue.size()<<endl;
 
 	//creating single service thread to run polling/broadcast function
@@ -59,7 +58,12 @@ int main()
 			cout<<"Subscriber Thread "<< i+1 <<" not created successfully \n";
 		}
 	}
-    
+/* 	while(1){
+		cout<<"Size of main service msg queue"<<service.messagesQueue.size()<<endl;
+		cout<<"cplusplus subs message count is "<<sobj[0].subscriberMessages.size();
+		cout<<"default subs message count is "<<service.defobject->subscriberMessages.size();
+		sleep(5);
+	} */
 
 	// join all the publisher, subscriber and service threads
  	for(int i=0;i<5;i++){

@@ -17,6 +17,7 @@ void pubsubservice::adMessageToQueue(message &msg)
 		if(messagesQueue.size()<this->size){
 			int status = mutx.lock();
 			messagesQueue.push(msg);
+			// compare with spdk enque behaviour.
 			status = mutx.unlock();
 			break;
 		}
@@ -75,21 +76,26 @@ void pubsubservice::broadcast()
 				if (it != subscribersTopicMap.end()) {
 					vector<subscriber*> subscribers = subscribersTopicMap[topic];
 					for (subscriber* a : subscribers) {
+						a->subMutex.lock();
 						vector<message> subMessages = a->getSubscriberMessages();
 						subMessages.push_back(Message);
 						a->setSubscriberMessages(subMessages);
+						if(subMessages.size()){
+							pthread_cond_signal(&a->subCond);
+						}
 						cout << "\nNumber of messages for current sub " <<a->name <<" are " << subMessages.size() << " : " <<a->subscriberMessages.size() << endl;
 						a->printMessages();
+						a->subMutex.unlock();
 					}
 				}
 				else
 				{
 					cout<<"No subscriber for "<< topic << " topic. pushing to default subscriber" <<endl;
-					vector<message> subMessages = defobject->getSubscriberMessages();
+					vector<message> subMessages = defSubscriber->getSubscriberMessages();
 					subMessages.push_back(Message);
-					defobject->setSubscriberMessages(subMessages);
-					cout << "\nNumber of messages for current sub " <<defobject->name <<" are " << subMessages.size() << " : " <<defobject->subscriberMessages.size() << endl;
-					defobject->printMessages();
+					defSubscriber->setSubscriberMessages(subMessages);
+					cout << "\nNumber of messages for current sub " <<defSubscriber->name <<" are " << subMessages.size() << " : " <<defSubscriber->subscriberMessages.size() << endl;
+					defSubscriber->printMessages();
 				}
 				
 			}

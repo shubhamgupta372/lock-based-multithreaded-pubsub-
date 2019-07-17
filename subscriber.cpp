@@ -4,7 +4,6 @@
 #include"subscriber.h"
 using namespace std;
 
-
 subscriber::subscriber(string name)
 {
 	this->name = name;
@@ -37,5 +36,25 @@ void subscriber::printMessages() const
 }
 void subscriber::Run()
 {
-	//cout<<"In Subscriber "<<this->name<<" Run method \n";
+	while(1){
+		if(this->subscriberMessages.size()==0){
+			//wait
+			//sleep(5);
+			pthread_cond_wait(&subCond,&subMutex.plock);
+		}
+		else{
+			subMutex.lock();
+			while(this->subscriberMessages.size()>0){
+				subscriberMessages.pop_back();
+				cout<<"In Subscriber "<<this->name<<" Run method \n";
+				int fact=1,num=10;
+				while(num!=0){
+					fact *=num;
+					num /=10;
+				}
+				cout<<"factorial is"<<fact<<endl;
+			}
+			subMutex.unlock();
+		}
+	}
 }

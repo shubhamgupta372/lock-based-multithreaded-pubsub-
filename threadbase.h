@@ -38,7 +38,7 @@ public:
 	{
 		return pthread_mutex_unlock(&plock);
 	}
-private:
+public:
 pthread_mutex_t plock;
 pthread_mutexattr_t attr;
 

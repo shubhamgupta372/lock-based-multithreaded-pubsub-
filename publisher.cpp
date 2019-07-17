@@ -2,7 +2,7 @@
 #include"message.h"
 #include"pubsubservice.h"
 #include"publisher.h"
-#include"pubstruc.h"
+#include"publisharguments.h"
 using namespace std;
 struct publishArguments;
 

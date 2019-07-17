@@ -7,6 +7,7 @@
 #include"message.h"
 #include<vector>
 #include"threadbase.h"
+#include<pthread.h>
 using namespace std;
 class pubsubservice;
 
@@ -27,6 +28,8 @@ public:
 public:
 	string name;
 	vector<message> subscriberMessages;
+	Mutex subMutex;
+	pthread_cond_t subCond;
 	/*bool operator ==(subscriber right) const
 	{
 		return subscriberMessages == right.subscriberMessages;
