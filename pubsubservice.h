@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _PUBSUBSERVICE_H
 #define _PUBSUBSERVICE_H
 
@@ -9,6 +8,7 @@
 #include"subscriber.h"
 #include<queue>
 #include"threadbase.h"
+#include"mutexcv.h"
 using namespace std;
 
 class pubsubservice:public ThreadBase {
@@ -19,14 +19,15 @@ public:
 	void addSubscriber(string topic, subscriber* Subscriber);
 	void removeSubscriber(string topic, subscriber* Subscriber);
 	void broadcast();
-	void getMessagesForSubscriberOfTopic(string topic, subscriber &Subscriber);
+	//void getMessagesForSubscriberOfTopic(string topic, subscriber &Subscriber);
 
-public:
-	map<string, vector<subscriber *>> subscribersTopicMap;// change set to vector
+private:
+	map<string, vector<subscriber *>> subscribersTopicMap;
 	queue<message> messagesQueue;
-	subscriber *defSubscriber= new subscriber("default");
-	int size;
-
+	subscriber *defSubscriber= new subscriber("default"); // default subscriber to contain message not subscribed by any subscriber
+	int size; // dummy size to replicate fixed size circular buffer
+	Mutex serviceMutex; // lock for main message queue to be shared by publisher and service
+	long unsigned int msgcount;
 };
 
 #endif

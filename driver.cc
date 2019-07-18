@@ -42,7 +42,7 @@ int main()
 		std::cout<<pobj[i].GetThreadName()<<" created \n";
 	}
 	
-	cout<< service.messagesQueue.size()<<endl;
+	//cout<< service.messagesQueue.size()<<endl;
 
 	//creating single service thread to run polling/broadcast function
 	bool status=service.Start("Service_Thread");
@@ -74,7 +74,7 @@ int main()
 	sobj[1].Join();
 
 
-	cout<<"Size of main service msg queue"<<service.messagesQueue.size()<<endl;
+	//cout<<"Size of main service msg queue"<<service.messagesQueue.size()<<endl;
 	//cout<<service.messagesQueue.front().getTopic();
 	//cout<<"cplusplus subs message count is "<<sobj.subscriberMessages.size();
     return 0;

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _SUBSCRIBER_H
 #define _SUBSCRIBER_H
 
@@ -7,6 +6,7 @@
 #include"message.h"
 #include<vector>
 #include"threadbase.h"
+#include"mutexcv.h"
 #include<pthread.h>
 using namespace std;
 class pubsubservice;
@@ -19,17 +19,18 @@ public:
 	void setSubscriberMessages(vector<message> &subscriberMessages);
 	void addSubscription(string topic, pubsubservice &service);
 	void removeSubscription(string topic, pubsubservice &service);
-	void getMessagesForSubscriberOfTopic(string topic, pubsubservice &service);
+	//void getMessagesForSubscriberOfTopic(string topic, pubsubservice &service);
 	void printMessages() const;
+	string getname();
+	LockCondwait * getlock();
 	/*bool operator< (subscriber& right) const
 	{
 		return subscriberMessages.size() < right.subscriberMessages.size();
 	}*/
-public:
+private:
 	string name;
 	vector<message> subscriberMessages;
-	Mutex subMutex;
-	pthread_cond_t subCond;
+	LockCondwait lockcw;
 	/*bool operator ==(subscriber right) const
 	{
 		return subscriberMessages == right.subscriberMessages;

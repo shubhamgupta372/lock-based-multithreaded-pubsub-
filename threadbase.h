@@ -8,61 +8,7 @@
 #include <cstring>
 using namespace std;
 
-class Mutex{
-public:
-	Mutex()
-	{
-		//plock = PTHREAD_MUTEX_INITIALIZER;
-		if (pthread_mutexattr_init(&attr) != 0) {
-   			perror("pthread_mutexattr_init() error");
-    		exit(1);
-  		}
-		if(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK) !=0){
-			perror("pthread_mutexattr_settype() error");
-    		exit(1);
-		}
-		if (pthread_mutex_init(&plock,&attr) != 0) {
-   			perror("pthread_mutex_init() error");
-    		exit(1);
-  		}
-	}
-	virtual ~Mutex()
-	{
-		pthread_mutex_destroy(&plock);
-	}
-	int lock()
-	{
-		return pthread_mutex_lock(&plock);
-	}
-	int unlock()
-	{
-		return pthread_mutex_unlock(&plock);
-	}
-public:
-pthread_mutex_t plock;
-pthread_mutexattr_t attr;
-
-};
-
 class ThreadBase {
-private:
-	pthread_t 			m_ThreadHandle;
-	/*	Description		- Handle the POSIX thread's attributes.
-	 */
-	pthread_attr_t     	m_ThreadAttribute;
-	/*	Description		- Storing the thread's name.
-	 */
-	char 				m_ThreadName[64];
-	/*	Description		- Helper function to start the thread.
-	 */
-	static
-	void *Dispatch(void *arg) {
-		ThreadBase *pThread(static_cast<ThreadBase *>(arg));
-		//std::cout<<"in "<<pThread->GetThreadName()<< " Dispatch \n";
-		pThread->Run();
-		return NULL;
-	}
-
 public: 
 	/*	Description		- Default constructor.
 	 */
@@ -118,6 +64,24 @@ public:
 		if(pthread_join(m_ThreadHandle, &ret)!=0){
 			std::cout<<"Cannot join threads, Error \n";
 		}
+	}
+
+private:
+	pthread_t 			m_ThreadHandle;
+	/*	Description		- Handle the POSIX thread's attributes.
+	 */
+	pthread_attr_t     	m_ThreadAttribute;
+	/*	Description		- Storing the thread's name.
+	 */
+	char 				m_ThreadName[64];
+	/*	Description		- Helper function to start the thread.
+	 */
+	static
+	void *Dispatch(void *arg) {
+		ThreadBase *pThread(static_cast<ThreadBase *>(arg));
+		//std::cout<<"in "<<pThread->GetThreadName()<< " Dispatch \n";
+		pThread->Run();
+		return NULL;
 	}
 };
 

@@ -1,4 +1,3 @@
-#pragma once
 
 #ifndef _PUBLISHARGUMENTS_H
 #define _PUBLISHARGUMENTS_H
@@ -14,4 +13,4 @@ struct publishArguments{
 	pubsubservice * sevice_obj;
 };
 
-#endif;
+#endif

@@ -24,15 +24,26 @@ void subscriber::removeSubscription(string topic, pubsubservice &pubSubService)
 {
 	pubSubService.removeSubscriber(topic, this);
 }
+/*
 void subscriber::getMessagesForSubscriberOfTopic(string topic, pubsubservice &pubSubService)
 {
 	pubSubService.getMessagesForSubscriberOfTopic(topic, *this);
 }
+*/ 
 void subscriber::printMessages() const
 {
 	for (message Message : subscriberMessages) {
 		cout<<"Message Topic -> " + Message.getTopic() + " : " + Message.getPayload()<<endl;
 	}
+}
+string subscriber::getname()
+{
+	return name;
+}
+
+LockCondwait * subscriber::getlock()
+{
+	return &lockcw;
 }
 void subscriber::Run()
 {
@@ -40,21 +51,22 @@ void subscriber::Run()
 		if(this->subscriberMessages.size()==0){
 			//wait
 			//sleep(5);
-			pthread_cond_wait(&subCond,&subMutex.plock);
+			lockcw.wait();
+			//pthread_cond_wait(&subCond,&subMutex.plock);
 		}
 		else{
-			subMutex.lock();
 			while(this->subscriberMessages.size()>0){
+				lockcw.lock();
 				subscriberMessages.pop_back();
+				lockcw.unlock();
 				cout<<"In Subscriber "<<this->name<<" Run method \n";
 				int fact=1,num=10;
-				while(num!=0){
+				while(num>0){
 					fact *=num;
-					num /=10;
+					num --;
 				}
-				cout<<"factorial is"<<fact<<endl;
+				cout<<"factorial is"<< fact<<endl;
 			}
-			subMutex.unlock();
 		}
 	}
 }
