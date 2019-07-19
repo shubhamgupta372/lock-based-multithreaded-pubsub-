@@ -31,6 +31,7 @@ private:
 	string name;
 	vector<message> subscriberMessages;
 	LockCondwait lockcw;
+	unsigned long int msgcount; 
 	/*bool operator ==(subscriber right) const
 	{
 		return subscriberMessages == right.subscriberMessages;

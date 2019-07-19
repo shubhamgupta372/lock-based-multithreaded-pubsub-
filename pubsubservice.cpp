@@ -18,7 +18,8 @@ void pubsubservice::adMessageToQueue(message &msg)
 		if(messagesQueue.size()<this->size){	
 			messagesQueue.push(msg);
 			msgcount++;
-			cout<<" Count of messages published till now : "<< msgcount << endl;
+			cout<<"New message published for '"<<msg.getTopic()<< "' topic"<< endl;
+			cout<<"Count of messages published till now : "<< msgcount << endl;
 			// compare with spdk enque behaviour.
 			status = serviceMutex.unlock();
 			break;
@@ -64,7 +65,7 @@ void pubsubservice::broadcast()
 {
 	while(1){
 		if (!messagesQueue.size()){
-			cout << "No more messages from publisher in msg queue \n";
+			cout << "No more messages from publisher in msg queue, waiting for new msg \n";
 			sleep(5);
 
 		}

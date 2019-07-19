@@ -39,7 +39,7 @@ int main()
 		if(!status){
 			cout<<"Publisher Thread "<<i+1<<" not created successfully \n";
 		}
-		std::cout<<pobj[i].GetThreadName()<<" created \n";
+		//std::cout<<pobj[i].GetThreadName()<<" created \n";
 	}
 	
 	//cout<< service.messagesQueue.size()<<endl;

@@ -7,6 +7,7 @@ using namespace std;
 subscriber::subscriber(string name)
 {
 	this->name = name;
+	this->msgcount=0;
 }
 vector<message> subscriber::getSubscriberMessages() 
 {
@@ -58,14 +59,17 @@ void subscriber::Run()
 			while(this->subscriberMessages.size()>0){
 				lockcw.lock();
 				subscriberMessages.pop_back();
+				this->msgcount++;
 				lockcw.unlock();
 				cout<<"In Subscriber "<<this->name<<" Run method \n";
+				cout<<"performing operation for " << this->msgcount<<" message\n";
 				int fact=1,num=10;
 				while(num>0){
 					fact *=num;
 					num --;
 				}
-				cout<<"factorial is"<< fact<<endl;
+				cout<<"factorial is : "<< fact<<endl;
+				cout<< "operation finished for " << this->msgcount <<" message\n";
 			}
 		}
 	}
