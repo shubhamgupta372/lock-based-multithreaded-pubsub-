@@ -27,7 +27,7 @@ void pubsubservice::adMessageToQueue(message &msg)
 		else
 		{
 			status = serviceMutex.unlock();
-			sleep(5);
+			sleep(1);
 		}
 	}
 	

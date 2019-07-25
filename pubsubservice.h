@@ -9,8 +9,10 @@
 #include<queue>
 #include"threadbase.h"
 #include"mutexcv.h"
+#include<chrono>
 using namespace std;
 
+static const auto start_time= chrono::steady_clock::now();
 class pubsubservice:public ThreadBase {
 public:
 	pubsubservice(int);

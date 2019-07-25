@@ -22,8 +22,8 @@ void InitialisePubObject(message &mobj, pubsubservice &psobj, publisher &pobj)
 
 int main()
 {
-	pubsubservice service(2); 
-	publisher  pobj[5];
+	pubsubservice service(100); 
+	publisher  pobj[500];
 	message cplusplusMsg[5]={{"cplusplus", "Core cplusplus Concepts"},
 	{"cplusplus", "Dependency and AOP"},{"java", "STL library"},
 	{"cplusplus","Boost"},{"java","pubsub"}};
@@ -31,9 +31,9 @@ int main()
 	service.addSubscriber("cplusplus",&sobj[0]);
 	
 	// creating thread for each publisher object and publishing meassges
-	for(int i=0;i<5;i++)
+	for(int i=0;i<500;i++)
 	{
-		InitialisePubObject(cplusplusMsg[i],service,pobj[i]);
+		InitialisePubObject(cplusplusMsg[i%5],service,pobj[i]);
 		string name="Publisher Thread " + std::to_string(i+1);
         bool status=pobj[i].Start(name.c_str());
 		if(!status){
@@ -66,7 +66,7 @@ int main()
 	} */
 
 	// join all the publisher, subscriber and service threads
- 	for(int i=0;i<5;i++){
+ 	for(int i=0;i<500;i++){
  		pobj[i].Join();
 	}
 	service.Join();

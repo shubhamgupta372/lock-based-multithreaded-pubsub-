@@ -2,6 +2,7 @@
 #include"message.h"
 #include"pubsubservice.h"
 #include"subscriber.h"
+#include<chrono>
 using namespace std;
 
 subscriber::subscriber(string name)
@@ -70,6 +71,8 @@ void subscriber::Run()
 				}
 				cout<<"factorial is : "<< fact<<endl;
 				cout<< "operation finished for " << this->msgcount <<" message\n";
+				auto end_time = chrono::steady_clock::now();
+				cout << "Elapsed time in milliseconds : " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count()<< " ms" << endl;
 			}
 		}
 	}
