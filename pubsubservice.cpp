@@ -11,14 +11,14 @@ pubsubservice::pubsubservice(int size)
 	this->size=size;
 	this->msgcount=0;
 }
-void pubsubservice::adMessageToQueue(message &msg)
+void pubsubservice::adMessageToQueue(message * msg)
 {
 	while(1){
 		int status = serviceMutex.lock();
 		if(messagesQueue.size()<this->size){	
 			messagesQueue.push(msg);
 			msgcount++;
-			cout<<"New message published for '"<<msg.getTopic()<< "' topic"<< endl;
+			cout<<"New message published for '"<<msg->getTopic()<< "' topic"<< endl;
 			cout<<"Count of messages published till now : "<< msgcount << endl;
 			// compare with spdk enque behaviour.
 			status = serviceMutex.unlock();
@@ -72,17 +72,17 @@ void pubsubservice::broadcast()
 		else {
 			int status= serviceMutex.lock();
 			while (messagesQueue.size()) {
-				message Message = messagesQueue.front();
+				message * Message = messagesQueue.front();
 				messagesQueue.pop();
-				string topic = Message.getTopic();
+				string topic = Message->getTopic();
 				map<string, vector<subscriber*>>::iterator it;
 				it = subscribersTopicMap.find(topic);
 				if (it != subscribersTopicMap.end()) {
 					vector<subscriber*> subscribers = subscribersTopicMap[topic];
 					for (subscriber* a : subscribers) {
 						a->getlock()->lock();
-						vector<message> subMessages = a->getSubscriberMessages();
-						subMessages.push_back(Message);
+						queue<message *> subMessages = a->getSubscriberMessages();
+						subMessages.push(Message);
 						a->setSubscriberMessages(subMessages);
 						if(subMessages.size()){
 							//pthread_cond_signal(&a->subCond);
@@ -96,8 +96,8 @@ void pubsubservice::broadcast()
 				else
 				{
 					cout<< "No subscriber for " << topic << " topic. pushing to default subscriber" <<endl;
-					vector<message> subMessages = defSubscriber->getSubscriberMessages();
-					subMessages.push_back(Message);
+					queue<message*> subMessages = defSubscriber->getSubscriberMessages();
+					subMessages.push(Message);
 					defSubscriber->setSubscriberMessages(subMessages);
 					cout << "Number of messages for current sub " <<defSubscriber->getname() <<" are : " << subMessages.size() << endl;
 					defSubscriber->printMessages();
@@ -108,29 +108,7 @@ void pubsubservice::broadcast()
 		}
 	}
 }
-/*
-void pubsubservice::getMessagesForSubscriberOfTopic(string topic, subscriber &Subscriber)
-{
-	if (!messagesQueue.size()) {
-		cout << "No messages from publisher to display";
-	}
-	else {
-		while (messagesQueue.size()) {
-			message Message = messagesQueue.front();
-			messagesQueue.pop();
-			if (Message.getTopic() == topic) {
-				vector<subscriber*> &subscribers = subscribersTopicMap[topic];
-				for (subscriber* a : subscribers) {
-					vector<message> subMessages = a->getSubscriberMessages();
-					subMessages.push_back(Message);
-					a->setSubscriberMessages(subMessages);
-				}
-			}
-		}
-	}
 
-}
-*/
 void pubsubservice::Run()
 {
 	this->broadcast();

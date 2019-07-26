@@ -9,7 +9,7 @@ struct publishArguments;
  void *publisher::publish( void * obj1)
 {
 	publishArguments * obj= (publishArguments *) obj1;
-	obj->sevice_obj->adMessageToQueue(*(obj->message_obj));
+	obj->sevice_obj->adMessageToQueue(obj->message_obj);
 	//cout<<"message published to queue \n";
 	//pubSubService.adMessageToQueue(Message);
 }

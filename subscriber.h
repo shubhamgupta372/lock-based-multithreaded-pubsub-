@@ -4,7 +4,7 @@
 
 #include<iostream>
 #include"message.h"
-#include<vector>
+#include<queue>
 #include"threadbase.h"
 #include"mutexcv.h"
 #include<pthread.h>
@@ -15,8 +15,8 @@ class subscriber:public ThreadBase {
 public:
 	subscriber(string);
 	void Run();
-	vector<message> getSubscriberMessages();
-	void setSubscriberMessages(vector<message> &subscriberMessages);
+	queue<message*> getSubscriberMessages();
+	void setSubscriberMessages(queue<message*> &subscriberMessages);
 	void addSubscription(string topic, pubsubservice &service);
 	void removeSubscription(string topic, pubsubservice &service);
 	//void getMessagesForSubscriberOfTopic(string topic, pubsubservice &service);
@@ -29,7 +29,7 @@ public:
 	}*/
 private:
 	string name;
-	vector<message> subscriberMessages;
+	queue<message *> subscriberMessages;
 	LockCondwait lockcw;
 	unsigned long int msgcount; 
 	/*bool operator ==(subscriber right) const

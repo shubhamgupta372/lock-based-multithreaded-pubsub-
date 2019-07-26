@@ -10,11 +10,11 @@ subscriber::subscriber(string name)
 	this->name = name;
 	this->msgcount=0;
 }
-vector<message> subscriber::getSubscriberMessages() 
+queue<message*> subscriber::getSubscriberMessages() 
 {
 	return subscriberMessages;
 }
-void subscriber::setSubscriberMessages(vector<message> &subscriberMessagesarg)
+void subscriber::setSubscriberMessages(queue<message*> &subscriberMessagesarg)
 {
 	this->subscriberMessages = subscriberMessagesarg;
 }
@@ -34,9 +34,9 @@ void subscriber::getMessagesForSubscriberOfTopic(string topic, pubsubservice &pu
 */ 
 void subscriber::printMessages() const
 {
-	for (message Message : subscriberMessages) {
-		cout<<"Message Topic -> " + Message.getTopic() + " : " + Message.getPayload()<<endl;
-	}
+	/* for (message *Message : subscriberMessages) {
+		cout<<"Message Topic -> " + Message->getTopic() + " : " + Message->getPayload()<<endl;
+	}*/
 }
 string subscriber::getname()
 {
@@ -59,7 +59,7 @@ void subscriber::Run()
 		else{
 			while(this->subscriberMessages.size()>0){
 				lockcw.lock();
-				subscriberMessages.pop_back();
+				subscriberMessages.pop();
 				this->msgcount++;
 				lockcw.unlock();
 				cout<<"In Subscriber "<<this->name<<" Run method \n";
