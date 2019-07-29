@@ -50,30 +50,29 @@ LockCondwait * subscriber::getlock()
 void subscriber::Run()
 {
 	while(1){
+		lockcw.lock();
 		if(this->subscriberMessages.size()==0){
 			//wait
 			//sleep(5);
 			lockcw.wait();
 			//pthread_cond_wait(&subCond,&subMutex.plock);
 		}
-		else{
-			while(this->subscriberMessages.size()>0){
-				lockcw.lock();
-				subscriberMessages.pop();
-				this->msgcount++;
-				lockcw.unlock();
-				cout<<"In Subscriber "<<this->name<<" Run method \n";
-				cout<<"performing operation for " << this->msgcount<<" message\n";
-				int fact=1,num=10;
-				while(num>0){
-					fact *=num;
-					num --;
-				}
-				cout<<"factorial is : "<< fact<<endl;
-				cout<< "operation finished for " << this->msgcount <<" message\n";
-				auto end_time = chrono::steady_clock::now();
-				cout << "Elapsed time in milliseconds : " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count()<< " ms" << endl;
+		else{	
+			subscriberMessages.pop();
+			lockcw.unlock();
+			this->msgcount++;
+			cout<<"In Subscriber "<<this->name<<" Run method \n";
+			cout<<"performing operation for " << this->msgcount<<" message\n";
+			int fact=1,num=10;
+			while(num>0){
+				fact *=num;
+				num --;
 			}
+			cout<<"factorial is : "<< fact<<endl;
+			cout<< "operation finished for " << this->msgcount <<" message\n";
+			auto end_time = chrono::steady_clock::now();
+			cout << "Elapsed time in milliseconds : " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count()<< " ms" << endl;
+		
 		}
 	}
 }

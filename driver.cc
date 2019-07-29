@@ -22,16 +22,24 @@ void InitialisePubObject(message &mobj, pubsubservice &psobj, publisher &pobj)
 
 int main()
 {
-	pubsubservice service(100); 
-	publisher  pobj[500];
+//pubsub framework starts here
+	pubsubservice service(1024); 
+	publisher  pobj[1000];
 	message cplusplusMsg[5]={{"cplusplus", "Core cplusplus Concepts"},
 	{"cplusplus", "Dependency and AOP"},{"java", "STL library"},
 	{"cplusplus","Boost"},{"java","pubsub"}};
-	subscriber sobj[2]={{"cplusplussub"},{"pythonsub"}};
+	subscriber sobj[20]={{"Sub_1"},{"Sub_2"},{"Sub_3"},{"Sub_4"},{"Sub_5"},{"Sub_6"},{"Sub_7"},{"Sub_8"},{"Sub_9"},{"Sub_10"},
+	{"Sub_1"},{"Sub_12"},{"Sub_13"},{"Sub_14"},{"Sub_15"},{"Sub_16"},{"Sub_17"},{"Sub_18"},{"Sub_19"},{"Sub_20"}};
 	service.addSubscriber("cplusplus",&sobj[0]);
-	
+	service.addSubscriber("java",&sobj[1]);
+	for(int i=0;i<20;i+=2)
+	{
+		service.addSubscriber("cplusplus",&sobj[i]);
+		service.addSubscriber("java",&sobj[i+1]);
+
+	}
 	// creating thread for each publisher object and publishing meassges
-	for(int i=0;i<500;i++)
+	for(int i=0;i<1000;i++)
 	{
 		InitialisePubObject(cplusplusMsg[i%5],service,pobj[i]);
 		string name="Publisher Thread " + std::to_string(i+1);
@@ -39,39 +47,48 @@ int main()
 		if(!status){
 			cout<<"Publisher Thread "<<i+1<<" not created successfully \n";
 		}
-		//std::cout<<pobj[i].GetThreadName()<<" created \n";
+		else{
+			//std::cout<<pobj[i].GetThreadName()<<" created \n";
+		}
 	}
-	
-	//cout<< service.messagesQueue.size()<<endl;
 
 	//creating single service thread to run polling/broadcast function
 	bool status=service.Start("Service_Thread");
 		if(!status){
 			cout<<"Service Thread not created successfully \n";
 		}
+		else{
+			//std::cout<<service.GetThreadName()<<" created \n";
+		}
 
 	// creating 2 subscriber threads	
-	for(int i=0;i<2;i++){
+	for(int i=0;i<20;i++){
 		string name="Subscriber Thread " + std::to_string(i+1);
         bool status=sobj[i].Start(name.c_str());
 		if(!status){
 			cout<<"Subscriber Thread "<< i+1 <<" not created successfully \n";
 		}
+		else{
+			//std::cout<<sobj[i].GetThreadName()<<" created \n";
+		}
 	}
-/* 	while(1){
+	/* 	while(1){
 		cout<<"Size of main service msg queue"<<service.messagesQueue.size()<<endl;
 		cout<<"cplusplus subs message count is "<<sobj[0].subscriberMessages.size();
 		cout<<"default subs message count is "<<service.defobject->subscriberMessages.size();
 		sleep(5);
-	} */
+	} 
+	*/
 
 	// join all the publisher, subscriber and service threads
- 	for(int i=0;i<500;i++){
+ 	for(int i=0;i<1000;i++){
  		pobj[i].Join();
 	}
 	service.Join();
-	sobj[0].Join();
-	sobj[1].Join();
+	for(int i=0;i<20;i++){
+ 		sobj[i].Join();
+	}
+
 
 
 	//cout<<"Size of main service msg queue"<<service.messagesQueue.size()<<endl;

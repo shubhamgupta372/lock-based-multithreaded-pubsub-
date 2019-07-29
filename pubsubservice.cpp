@@ -66,7 +66,7 @@ void pubsubservice::broadcast()
 	while(1){
 		if (!messagesQueue.size()){
 			cout << "No more messages from publisher in msg queue, waiting for new msg \n";
-			sleep(5);
+			sleep(2);
 
 		}
 		else {
@@ -84,12 +84,9 @@ void pubsubservice::broadcast()
 						queue<message *> subMessages = a->getSubscriberMessages();
 						subMessages.push(Message);
 						a->setSubscriberMessages(subMessages);
-						if(subMessages.size()){
-							//pthread_cond_signal(&a->subCond);
-							a->getlock()->signal();
-						}
 						cout << "Number of messages for current sub " <<a->getname() <<" are : " << subMessages.size() << endl;
 						a->printMessages();
+						a->getlock()->signal();
 						a->getlock()->unlock();
 					}
 				}
