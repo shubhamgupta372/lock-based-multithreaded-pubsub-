@@ -10,9 +10,9 @@ subscriber::subscriber(string name)
 	this->name = name;
 	this->msgcount=0;
 }
-queue<message*> subscriber::getSubscriberMessages() 
+queue<message*> * subscriber::getSubscriberMessages() 
 {
-	return subscriberMessages;
+	return &subscriberMessages;
 }
 void subscriber::setSubscriberMessages(queue<message*> &subscriberMessagesarg)
 {
@@ -32,11 +32,16 @@ void subscriber::getMessagesForSubscriberOfTopic(string topic, pubsubservice &pu
 	pubSubService.getMessagesForSubscriberOfTopic(topic, *this);
 }
 */ 
-void subscriber::printMessages() const
+void subscriber::printMessages() 
 {
-	/* for (message *Message : subscriberMessages) {
-		cout<<"Message Topic -> " + Message->getTopic() + " : " + Message->getPayload()<<endl;
-	}*/
+	queue<message *> tempsubscriberMessages=*(this->getSubscriberMessages());
+	while(tempsubscriberMessages.size())
+	{
+		message tempmessage=*(tempsubscriberMessages.front());
+		tempsubscriberMessages.pop();
+		cout<<"Message Topic -> " + tempmessage.getTopic() + " : " + tempmessage.getPayload()<<endl;
+	}
+
 }
 string subscriber::getname()
 {

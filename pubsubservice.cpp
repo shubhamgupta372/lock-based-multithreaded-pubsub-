@@ -81,10 +81,10 @@ void pubsubservice::broadcast()
 					vector<subscriber*> subscribers = subscribersTopicMap[topic];
 					for (subscriber* a : subscribers) {
 						a->getlock()->lock();
-						queue<message *> subMessages = a->getSubscriberMessages();
-						subMessages.push(Message);
-						a->setSubscriberMessages(subMessages);
-						cout << "Number of messages for current sub " <<a->getname() <<" are : " << subMessages.size() << endl;
+						queue<message *> * subMessages = a->getSubscriberMessages();
+						subMessages->push(Message);
+						//a->setSubscriberMessages(subMessages);
+						cout << "Number of messages for current sub " <<a->getname() <<" are : " << subMessages->size() << endl;
 						a->printMessages();
 						a->getlock()->signal();
 						a->getlock()->unlock();
@@ -93,10 +93,10 @@ void pubsubservice::broadcast()
 				else
 				{
 					cout<< "No subscriber for " << topic << " topic. pushing to default subscriber" <<endl;
-					queue<message*> subMessages = defSubscriber->getSubscriberMessages();
-					subMessages.push(Message);
-					defSubscriber->setSubscriberMessages(subMessages);
-					cout << "Number of messages for current sub " <<defSubscriber->getname() <<" are : " << subMessages.size() << endl;
+					queue<message*> *subMessages = defSubscriber->getSubscriberMessages();
+					subMessages->push(Message);
+					//defSubscriber->setSubscriberMessages(subMessages);
+					cout << "Number of messages for current sub " <<defSubscriber->getname() <<" are : " << subMessages->size() << endl;
 					defSubscriber->printMessages();
 				}
 				

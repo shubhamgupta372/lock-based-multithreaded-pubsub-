@@ -15,12 +15,12 @@ class subscriber:public ThreadBase {
 public:
 	subscriber(string);
 	void Run();
-	queue<message*> getSubscriberMessages();
+	queue<message*> *getSubscriberMessages();
 	void setSubscriberMessages(queue<message*> &subscriberMessages);
 	void addSubscription(string topic, pubsubservice &service);
 	void removeSubscription(string topic, pubsubservice &service);
 	//void getMessagesForSubscriberOfTopic(string topic, pubsubservice &service);
-	void printMessages() const;
+	void printMessages();
 	string getname();
 	LockCondwait * getlock();
 	/*bool operator< (subscriber& right) const
