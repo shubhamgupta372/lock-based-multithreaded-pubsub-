@@ -18,7 +18,6 @@ void pubsubservice::adMessageToQueue(message * msg)
 		if(messagesQueue.size()<this->size){	
 			messagesQueue.push(msg);
 			msgcount++;
-			cout<<"New message published for '"<<msg->getTopic()<< "' topic"<< endl;
 			cout<<"Count of messages published till now : "<< msgcount << endl;
 			// compare with spdk enque behaviour.
 			status = serviceMutex.unlock();
@@ -67,7 +66,6 @@ void pubsubservice::broadcast()
 		if (!messagesQueue.size()){
 			cout << "No more messages from publisher in msg queue, waiting for new msg \n";
 			sleep(2);
-
 		}
 		else {
 			int status= serviceMutex.lock();
@@ -84,8 +82,8 @@ void pubsubservice::broadcast()
 						queue<message *> * subMessages = a->getSubscriberMessages();
 						subMessages->push(Message);
 						//a->setSubscriberMessages(subMessages);
-						cout << "Number of messages for current sub " <<a->getname() <<" are : " << subMessages->size() << endl;
-						a->printMessages();
+						//cout << "Number of messages for current sub " <<a->getname() <<" are : " << subMessages->size() << endl;
+						//a->printMessages();
 						a->getlock()->signal();
 						a->getlock()->unlock();
 					}
@@ -96,8 +94,8 @@ void pubsubservice::broadcast()
 					queue<message*> *subMessages = defSubscriber->getSubscriberMessages();
 					subMessages->push(Message);
 					//defSubscriber->setSubscriberMessages(subMessages);
-					cout << "Number of messages for current sub " <<defSubscriber->getname() <<" are : " << subMessages->size() << endl;
-					defSubscriber->printMessages();
+					//cout << "Number of messages for current sub " <<defSubscriber->getname() <<" are : " << subMessages->size() << endl;
+					//defSubscriber->printMessages();
 				}
 				
 			}

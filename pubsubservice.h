@@ -17,9 +17,9 @@ class pubsubservice:public ThreadBase {
 public:
 	pubsubservice(int);
     void Run();
-	void adMessageToQueue(message * message);
-	void addSubscriber(string topic, subscriber* Subscriber);
-	void removeSubscriber(string topic, subscriber* Subscriber);
+	void adMessageToQueue(message *message);
+	void addSubscriber(string topic, subscriber *Subscriber);
+	void removeSubscriber(string topic, subscriber *Subscriber);
 	void broadcast();
 	//void getMessagesForSubscriberOfTopic(string topic, subscriber &Subscriber);
 

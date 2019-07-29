@@ -26,12 +26,7 @@ void subscriber::removeSubscription(string topic, pubsubservice &pubSubService)
 {
 	pubSubService.removeSubscriber(topic, this);
 }
-/*
-void subscriber::getMessagesForSubscriberOfTopic(string topic, pubsubservice &pubSubService)
-{
-	pubSubService.getMessagesForSubscriberOfTopic(topic, *this);
-}
-*/ 
+
 void subscriber::printMessages() 
 {
 	queue<message *> tempsubscriberMessages=*(this->getSubscriberMessages());
@@ -57,26 +52,23 @@ void subscriber::Run()
 	while(1){
 		lockcw.lock();
 		if(this->subscriberMessages.size()==0){
-			//wait
-			//sleep(5);
 			lockcw.wait();
-			//pthread_cond_wait(&subCond,&subMutex.plock);
 		}
 		else{	
 			subscriberMessages.pop();
 			lockcw.unlock();
 			this->msgcount++;
-			cout<<"In Subscriber "<<this->name<<" Run method \n";
-			cout<<"performing operation for " << this->msgcount<<" message\n";
+			cout<<"\n**************In Subscriber "<<this->name<<" Run method ***********\n";
+			cout<<"performing operation for message number " << this->msgcount<<"\n";
 			int fact=1,num=10;
 			while(num>0){
 				fact *=num;
 				num --;
 			}
-			cout<<"factorial is : "<< fact<<endl;
-			cout<< "operation finished for " << this->msgcount <<" message\n";
 			auto end_time = chrono::steady_clock::now();
-			cout << "Elapsed time in milliseconds : " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count()<< " ms" << endl;
+			cout<<"factorial is : "<< fact<<endl;
+			cout<< "************operation finished for " << this->msgcount <<" message***********\n";
+			cout << "***********Elapsed time in milliseconds : " << chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count()<< " ms ***********" << endl;
 		
 		}
 	}
