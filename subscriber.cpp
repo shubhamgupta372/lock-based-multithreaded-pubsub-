@@ -14,7 +14,7 @@ queue<message*> * subscriber::getSubscriberMessages()
 {
 	return &subscriberMessages;
 }
-void subscriber::setSubscriberMessages(queue<message*> &subscriberMessagesarg)
+void subscriber::setSubscriberMessages(queue<message*> subscriberMessagesarg)
 {
 	this->subscriberMessages = subscriberMessagesarg;
 }
