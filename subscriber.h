@@ -15,7 +15,7 @@ public:
 	subscriber(string);
 	void Run();
 	queue<message *> *getSubscriberMessages();
-	void setSubscriberMessages(queue<message*> subscriberMessages);
+	void setSubscriberMessages(queue<message *> subscriberMessages);
 	void addSubscription(string topic, pubsubservice &service);
 	void removeSubscription(string topic, pubsubservice &service);
 	void printMessages();

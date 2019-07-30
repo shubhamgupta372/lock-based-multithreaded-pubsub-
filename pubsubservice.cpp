@@ -12,7 +12,7 @@ pubsubservice::pubsubservice(int size)
 	this->size=size;
 	this->msgcount=0;
 }
-void pubsubservice::adMessageToQueue(message * msg)
+void pubsubservice::adMessageToQueue(message *msg)
 {
 	while(1){
 		int status = serviceMutex.lock();
@@ -32,7 +32,7 @@ void pubsubservice::adMessageToQueue(message * msg)
 	}
 	
 }
-void pubsubservice::addSubscriber(string topic, subscriber* Subscriber)
+void pubsubservice::addSubscriber(string topic, subscriber *Subscriber)
 {
 	map<string, vector<subscriber *>>::iterator it;
 	it = subscribersTopicMap.find(topic);
@@ -42,12 +42,12 @@ void pubsubservice::addSubscriber(string topic, subscriber* Subscriber)
 		//subscribersTopicMap[topic] = subscribers;
 	}
 	else {
-		vector<subscriber*> subscribers;
+		vector<subscriber *> subscribers;
 		subscribers.push_back(Subscriber);
 		subscribersTopicMap[topic] = subscribers;
 	}
 }
-void pubsubservice::removeSubscriber(string topic, subscriber* Subscriber)
+void pubsubservice::removeSubscriber(string topic, subscriber *Subscriber)
 {
 	map<string,vector<subscriber*>>::iterator it;
 	it = subscribersTopicMap.find(topic);
@@ -71,16 +71,16 @@ void pubsubservice::broadcast()
 		else {
 			int status= serviceMutex.lock();
 			while (messagesQueue.size()) {
-				message * Message = messagesQueue.front();
+				message *Message = messagesQueue.front();
 				messagesQueue.pop();
 				string topic = Message->getTopic();
 				map<string, vector<subscriber*>>::iterator it;
 				it = subscribersTopicMap.find(topic);
 				if (it != subscribersTopicMap.end()) {
 					vector<subscriber*> subscribers = subscribersTopicMap[topic];
-					for (subscriber* a : subscribers) {
+					for (subscriber *a : subscribers) {
 						a->getlock()->lock();
-						queue<message *> * subMessages = a->getSubscriberMessages();
+						queue<message *> *subMessages = a->getSubscriberMessages();
 						subMessages->push(Message);
 						//a->setSubscriberMessages(subMessages);
 						//cout << "Number of messages for current sub " <<a->getname() <<" are : " << subMessages->size() << endl;

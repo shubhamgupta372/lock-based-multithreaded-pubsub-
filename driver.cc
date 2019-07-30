@@ -11,13 +11,13 @@
 using namespace std;
 
 // method to intialise arguments of publish method in publisher object
-void InitialisePubObject(message &mobj, pubsubservice &psobj, publisher &pobj)
+void InitialisePubObject(message *mobj, pubsubservice *psobj, publisher *pobj)
 {
-	publishArguments * pargs;
+	publishArguments *pargs;
 	pargs= new publishArguments;
-	pargs->message_obj=&mobj;
-	pargs->sevice_obj=&psobj;
-	pobj.publisher_args=pargs;
+	pargs->message_obj = mobj;
+	pargs->sevice_obj = psobj;
+	pobj->publisher_args = pargs;
 }
 
 int main()
@@ -40,7 +40,7 @@ int main()
 	// creating thread for each publisher object and publishing meassges
 	for(int i=0;i<1000;i++)
 	{
-		InitialisePubObject(cplusplusMsg[i%5],service,pobj[i]);
+		InitialisePubObject(&cplusplusMsg[i%5],&service,&pobj[i]);
 		string name="Publisher Thread " + std::to_string(i+1);
         bool status=pobj[i].Start(name.c_str());
 		if(!status){

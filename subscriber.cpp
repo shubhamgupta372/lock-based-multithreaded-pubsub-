@@ -10,11 +10,11 @@ subscriber::subscriber(string name)
 	this->name = name;
 	this->msgcount=0;
 }
-queue<message*> * subscriber::getSubscriberMessages() 
+queue<message*> *subscriber::getSubscriberMessages() 
 {
 	return &subscriberMessages;
 }
-void subscriber::setSubscriberMessages(queue<message*> subscriberMessagesarg)
+void subscriber::setSubscriberMessages(queue<message *> subscriberMessagesarg)
 {
 	this->subscriberMessages = subscriberMessagesarg;
 }
@@ -43,7 +43,7 @@ string subscriber::getname()
 	return name;
 }
 
-LockCondwait * subscriber::getlock()
+LockCondwait *subscriber::getlock()
 {
 	return &lockcw;
 }

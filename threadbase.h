@@ -49,12 +49,7 @@ public:
 		return true;
 	}
 
-	virtual void OnRun() {
-		std::cout << GetThreadName() <<" says: Hello" << std::endl;
-	}
-
 	virtual void Run() {
-		OnRun();
 
 	}
 
