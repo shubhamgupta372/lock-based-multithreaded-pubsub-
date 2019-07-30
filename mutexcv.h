@@ -62,7 +62,7 @@ public:
 	{
 		pthread_cond_destroy(&subCond);
 	}
-public:
+private:
 	pthread_cond_t subCond;
 
 };
