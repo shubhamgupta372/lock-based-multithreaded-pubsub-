@@ -8,6 +8,7 @@ using namespace std;
 
 pubsubservice::pubsubservice(int size)
 {
+	defSubscriber= new subscriber("default");
 	this->size=size;
 	this->msgcount=0;
 }

@@ -45,6 +45,10 @@ pthread_mutexattr_t attr;
 
 class LockCondwait: public Mutex{
 public:
+	LockCondwait()
+	{
+		pthread_cond_init(&subCond,NULL);
+	}
 	int wait()
 	{
 		return pthread_cond_wait(&subCond,&plock);
@@ -53,6 +57,10 @@ public:
 	int signal()
 	{
 		return pthread_cond_signal(&subCond);
+	}
+	~LockCondwait()
+	{
+		pthread_cond_destroy(&subCond);
 	}
 public:
 	pthread_cond_t subCond;
